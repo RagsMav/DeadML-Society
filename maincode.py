@@ -73,21 +73,21 @@ def parse_uploaded_file(uploaded_file):
     if not data:
         return pd.DataFrame()
         
-    df = pd.DataFrame(data, columns=['DateTime', 'Author', 'Message'])
-    df['DateTime'] = pd.to_datetime(df['DateTime'], format='%d/%m/%y, %I:%M %p', errors='coerce')
-    return df
+    wa_df = pd.DataFrame(data, columns=['DateTime', 'Author', 'Message'])
+    wa_df['DateTime'] = pd.to_datetime(wa_df['DateTime'], format='%d/%m/%y, %I:%M %p', errors='coerce')
+    return wa_df
 
 
-def analyze_data(df):
-    user_stats = df['Author'].value_counts().reset_index()
+def analyze_data(wa_df):
+    user_stats = wa_df['Author'].value_counts().reset_index()
     user_stats.columns = ['Author', 'Message Count']
     
     sia = SentimentIntensityAnalyzer()
     sentiment_scores = {}
     
-    for author in df['Author'].unique():
+    for author in wa_df['Author'].unique():
 
-        msgs = df[df['Author'] == author]['Message'].astype(str).tolist()
+        msgs = wa_df[wa_df['Author'] == author]['Message'].astype(str).tolist()
 
         subset = msgs[-500:]
         score = sum([sia.polarity_scores(m)['compound'] for m in subset]) / len(subset) if subset else 0
@@ -124,19 +124,19 @@ uploaded_file = st.file_uploader("Choose a file", type=['txt'])
 
 if uploaded_file is not None:
     with st.spinner('Parsing chat logs...'):
-        df = parse_uploaded_file(uploaded_file)
+        wa_df = parse_uploaded_file(uploaded_file)
         
-    if df.empty:
+    if wa_df.empty:
         st.error("❌ Could not parse the file. Ensure it is a valid WhatsApp text export.")
     else:
 
-        stats = analyze_data(df)
+        stats = analyze_data(wa_df)
         c1, c2, c3 = st.columns(3)
-        c1.metric("Total Messages", len(df))
-        c2.metric("Active Members", df['Author'].nunique())
+        c1.metric("Total Messages", len(wa_df))
+        c2.metric("Active Members", wa_df['Author'].nunique())
         
 
-        valid_dates = df['DateTime'].dropna()
+        valid_dates = wa_df['DateTime'].dropna()
         top_date = str(valid_dates.dt.date.mode()[0]) if not valid_dates.empty else "N/A"
         c3.metric("Most Active Date", top_date)
         
