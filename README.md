@@ -1,4 +1,4 @@
-This is an addition to the Main project the link to which is
+This is the second half of the project the link to whose website is
 https://deadmlsociety.streamlit.app/
 
-This has a link to redirect you to another website the source code of which is contained in this repository.
+This website has a link to redirect you to another website the source code of which is contained in this repository.
