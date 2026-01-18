@@ -5,4 +5,4 @@ https://deadmlsociety.streamlit.app/
 Link for this half
 https://deadml-society.streamlit.app
 In the Vibe Checker
-Use only the text exported by Whatsapp from Android
+Use only the text exported by Whatsapp from Android without media
