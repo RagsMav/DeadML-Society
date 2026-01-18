@@ -15,24 +15,19 @@ def load_lottieurl(url):
         return None
     return r.json()
 
-# --- SPLASH SCREEN (INTRO) ---
+
 if 'intro_done' not in st.session_state:
     st.session_state['intro_done'] = False
 
 if not st.session_state['intro_done']:
-    # Create an empty container that holds the intro
     intro_placeholder = st.empty()
     
-    # Load a "Tech/Hacker" animation for the intro
-    # You can change this URL to any animation from LottieFiles
     intro_lottie = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_w51pcehl.json")
 
     with intro_placeholder.container():
-        # 1. Spacer to push content down
         st.write("##")
         st.write("##")
         
-        # 2. Your Company Name (Big & Centered)
         st.markdown("""
             <h1 style='text-align: center; font-size: 70px; color: #FF4B4B;'>
                 DeadMLSociety
@@ -42,23 +37,16 @@ if not st.session_state['intro_done']:
             </h3>
             """, unsafe_allow_html=True)
         
-        # 3. The Animation centered
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if intro_lottie:
                 st_lottie(intro_lottie, height=300, key="intro_anim")
-        
-        # 4. Wait for 3.5 seconds
         time.sleep(4)
     
-    # 5. Clear the screen!
     intro_placeholder.empty()
     
-    # 6. Mark intro as done so it doesn't reload on clicks
     st.session_state['intro_done'] = True
 
-# --- 1. EMERGENCY SSL FIX (For Mac) ---
-# This ensures NLTK can download data without crashing
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
@@ -66,16 +54,12 @@ except AttributeError:
 else:
     ssl._create_default_https_context = _create_unverified_https_context
 
-# --- 2. SETUP ---
 st.set_page_config(page_title="Group Chat Vibe Checker", page_icon="😎", layout="wide")
 nltk.download('vader_lexicon', quiet=True)
 
-# --- 3. THE PARSER (Converts Text to Data) ---
 def parse_uploaded_file(uploaded_file):
-    # Read the uploaded file directly from memory
     file_content = uploaded_file.getvalue().decode("utf-8")
     
-    # Regex for your format: 21/07/25, 10:04 am - Name: Message
     pattern = r'^(\d{2}/\d{2}/\d{2}, \d{1,2}:\d{2}\s?[apAP][mM])\s-\s(.*?):\s(.*)$'
     
     data = []
@@ -90,17 +74,14 @@ def parse_uploaded_file(uploaded_file):
         return pd.DataFrame()
         
     df = pd.DataFrame(data, columns=['DateTime', 'Author', 'Message'])
-    # Convert DateTime
     df['DateTime'] = pd.to_datetime(df['DateTime'], format='%d/%m/%y, %I:%M %p', errors='coerce')
     return df
 
-# --- 4. THE ANALYZER (Calculates Stats) ---
+
 def analyze_data(df):
-    # Message Count
     user_stats = df['Author'].value_counts().reset_index()
     user_stats.columns = ['Author', 'Message Count']
     
-    # Sentiment Analysis
     sia = SentimentIntensityAnalyzer()
     sentiment_scores = {}
     
@@ -127,14 +108,11 @@ def analyze_data(df):
     user_stats['Archetype'] = user_stats.apply(get_archetype, axis=1)
     return user_stats
 
-# --- 5. THE MAIN APP INTERFACE ---
 lottie_coding = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
 
-# Layout: Animation on the left, Title on the right
 col1, col2 = st.columns([1, 4])
 
 with col1:
-    # Display the animation (height=150px)
     st_lottie(lottie_coding, height=150, key="coding")
 
 with col2:
@@ -153,9 +131,6 @@ if uploaded_file is not None:
     else:
 
         stats = analyze_data(df)
-        
-        # --- DISPLAY STATS ---
-
         c1, c2, c3 = st.columns(3)
         c1.metric("Total Messages", len(df))
         c2.metric("Active Members", df['Author'].nunique())
