@@ -2,4 +2,3 @@ streamlit
 pandas
 nltk
 plotly
-Upload the text file that has been exported from WhatsApp Android.
