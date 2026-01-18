@@ -49,7 +49,7 @@ if not st.session_state['intro_done']:
                 st_lottie(intro_lottie, height=300, key="intro_anim")
         
         # 4. Wait for 3.5 seconds
-        time.sleep(3.5)
+        time.sleep(4)
     
     # 5. Clear the screen!
     intro_placeholder.empty()
@@ -67,7 +67,7 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 
 # --- 2. SETUP ---
-st.set_page_config(page_title="Group Chat Vibe Checker", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Group Chat Vibe Checker", page_icon="😎", layout="wide")
 nltk.download('vader_lexicon', quiet=True)
 
 # --- 3. THE PARSER (Converts Text to Data) ---
