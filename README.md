@@ -1,4 +1,6 @@
 This is the second half of the project the link to whose website is
 https://deadmlsociety.streamlit.app/
+(Link for the total product)
 
-This website has a link to redirect you to another website the source code of which is contained in this repository.
+Link for this half
+https://deadml-society.streamlit.app
