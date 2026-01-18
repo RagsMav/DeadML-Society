@@ -82,7 +82,7 @@ def analyze_data(wa_df):
     user_stats = wa_df['Author'].value_counts().reset_index()
     user_stats.columns = ['Author', 'Message Count']
     
-    sia = SentimentIntensityAnalyzer()
+    vibe_checker = SentimentIntensityAnalyzer()
     sentiment_scores = {}
     
     for author in wa_df['Author'].unique():
@@ -90,7 +90,7 @@ def analyze_data(wa_df):
         msgs = wa_df[wa_df['Author'] == author]['Message'].astype(str).tolist()
 
         subset = msgs[-500:]
-        score = sum([sia.polarity_scores(m)['compound'] for m in subset]) / len(subset) if subset else 0
+        score = sum([vibe_checker.polarity_scores(m)['compound'] for m in subset]) / len(subset) if subset else 0
         sentiment_scores[author] = score
         
     user_stats['Vibe Score'] = user_stats['Author'].map(sentiment_scores)
