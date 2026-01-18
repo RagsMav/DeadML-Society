@@ -54,16 +54,16 @@ def analyze_data(df):
     sentiment_scores = {}
     
     for author in df['Author'].unique():
-        # Get messages as strings
+
         msgs = df[df['Author'] == author]['Message'].astype(str).tolist()
-        # Analyze a sample (last 100) for speed
+
         subset = msgs[-500:]
         score = sum([sia.polarity_scores(m)['compound'] for m in subset]) / len(subset) if subset else 0
         sentiment_scores[author] = score
         
     user_stats['Vibe Score'] = user_stats['Author'].map(sentiment_scores)
     
-    # Determine Archetype
+
     def get_archetype(row):
         msgs = row['Message Count']
         vibe = row['Vibe Score']
@@ -77,10 +77,9 @@ def analyze_data(df):
     return user_stats
 
 # --- 5. THE MAIN APP INTERFACE ---
-st.title("🚀 Group Chat Vibe-Checker")
+st.title("😎 WhatsApp Chat Vibe-Checker")
 st.write("Upload your WhatsApp export file (.txt) to see who is who.")
 
-# File Uploader
 uploaded_file = st.file_uploader("Choose a file", type=['txt'])
 
 if uploaded_file is not None:
@@ -90,23 +89,22 @@ if uploaded_file is not None:
     if df.empty:
         st.error("❌ Could not parse the file. Ensure it is a valid WhatsApp text export.")
     else:
-        # Success! Run Analysis
+
         stats = analyze_data(df)
         
         # --- DISPLAY STATS ---
-        # 1. Top Metrics
+
         c1, c2, c3 = st.columns(3)
         c1.metric("Total Messages", len(df))
         c2.metric("Active Members", df['Author'].nunique())
         
-        # Fix for the Date Error: Convert date to String
+
         valid_dates = df['DateTime'].dropna()
         top_date = str(valid_dates.dt.date.mode()[0]) if not valid_dates.empty else "N/A"
         c3.metric("Most Active Date", top_date)
         
         st.divider()
         
-        # 2. Charts & Tables
         col1, col2 = st.columns([2, 1])
         
         with col1:
