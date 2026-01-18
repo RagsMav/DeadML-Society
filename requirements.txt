@@ -2,3 +2,5 @@ streamlit
 pandas
 nltk
 plotly
+streamlit-lottie
+requests
