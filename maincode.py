@@ -9,7 +9,7 @@ import requests
 from streamlit_lottie import st_lottie
 import time
 
-def load_lottieurl(url):
+def get_lottie(url):
     r = requests.get(url)
     if r.status_code != 200:
         return None
@@ -22,7 +22,7 @@ if 'intro_done' not in st.session_state:
 if not st.session_state['intro_done']:
     intro_placeholder = st.empty()
     
-    intro_lottie = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_w51pcehl.json")
+    intro_lottie = get_lottie("https://assets3.lottiefiles.com/packages/lf20_w51pcehl.json")
 
     with intro_placeholder.container():
         st.write("##")
@@ -108,7 +108,7 @@ def analyze_data(wa_df):
     user_stats['Archetype'] = user_stats.apply(get_archetype, axis=1)
     return user_stats
 
-lottie_coding = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
+lottie_coding = get_lottie("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
 
 col1, col2 = st.columns([1, 4])
 
