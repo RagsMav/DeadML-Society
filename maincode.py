@@ -7,6 +7,7 @@ import plotly.express as px
 import ssl
 import requests                         
 from streamlit_lottie import st_lottie
+import time
 
 def load_lottieurl(url):
     r = requests.get(url)
