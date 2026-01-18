@@ -5,6 +5,56 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import plotly.express as px
 import ssl
+import requests                         
+from streamlit_lottie import st_lottie
+
+def load_lottieurl(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+# --- SPLASH SCREEN (INTRO) ---
+if 'intro_done' not in st.session_state:
+    st.session_state['intro_done'] = False
+
+if not st.session_state['intro_done']:
+    # Create an empty container that holds the intro
+    intro_placeholder = st.empty()
+    
+    # Load a "Tech/Hacker" animation for the intro
+    # You can change this URL to any animation from LottieFiles
+    intro_lottie = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_w51pcehl.json")
+
+    with intro_placeholder.container():
+        # 1. Spacer to push content down
+        st.write("##")
+        st.write("##")
+        
+        # 2. Your Company Name (Big & Centered)
+        st.markdown("""
+            <h1 style='text-align: center; font-size: 70px; color: #FF4B4B;'>
+                DeadMLSociety
+            </h1>
+            <h3 style='text-align: center; color: grey;'>
+                Intelligent Systems. No Limits.
+            </h3>
+            """, unsafe_allow_html=True)
+        
+        # 3. The Animation centered
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if intro_lottie:
+                st_lottie(intro_lottie, height=300, key="intro_anim")
+        
+        # 4. Wait for 3.5 seconds
+        time.sleep(3.5)
+    
+    # 5. Clear the screen!
+    intro_placeholder.empty()
+    
+    # 6. Mark intro as done so it doesn't reload on clicks
+    st.session_state['intro_done'] = True
 
 # --- 1. EMERGENCY SSL FIX (For Mac) ---
 # This ensures NLTK can download data without crashing
@@ -77,8 +127,19 @@ def analyze_data(df):
     return user_stats
 
 # --- 5. THE MAIN APP INTERFACE ---
-st.title("😎 WhatsApp Chat Vibe-Checker")
-st.write("Upload your WhatsApp export file (.txt) to see who is who.")
+lottie_coding = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
+
+# Layout: Animation on the left, Title on the right
+col1, col2 = st.columns([1, 4])
+
+with col1:
+    # Display the animation (height=150px)
+    st_lottie(lottie_coding, height=150, key="coding")
+
+with col2:
+    st.title("😎 Group Chat Vibe-Checker")
+    st.write("Upload your WhatsApp export file (.txt) to see who is who.")
+
 
 uploaded_file = st.file_uploader("Choose a file", type=['txt'])
 
